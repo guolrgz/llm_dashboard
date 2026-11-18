@@ -1,0 +1,15 @@
+import path from 'node:path';
+import fs from 'node:fs';
+process.env.PLAYWRIGHT_BROWSERS_PATH = path.resolve('browsers');
+const libDirs=[path.resolve('libs/usr/lib/x86_64-linux-gnu'),path.resolve('libs/lib/x86_64-linux-gnu')].filter(d=>fs.existsSync(d));
+process.env.LD_LIBRARY_PATH=[...libDirs,process.env.LD_LIBRARY_PATH||''].filter(Boolean).join(':');
+const { chromium } = await import('playwright');
+const b = await chromium.launch({args:['--no-sandbox','--force-color-profile=srgb','--hide-scrollbars','--disable-lcd-text','--font-render-hinting=none']});
+const ctx = await b.newContext({viewport:{width:1376,height:768},deviceScaleFactor:2,colorScheme:'light',locale:'zh-CN'});
+const p = await ctx.newPage();
+const errs=[]; p.on('console',m=>{if(m.type()==='error')errs.push(m.text())}); p.on('pageerror',e=>errs.push(String(e)));
+await p.goto('http://127.0.0.1:5173/users.html',{waitUntil:'load'});
+await p.waitForTimeout(600);
+await p.screenshot({path:'out/users-smoke.png'});
+console.log(JSON.stringify({errs, title: await p.title(), dims: await p.evaluate(()=>[document.documentElement.scrollWidth, document.documentElement.scrollHeight])},null,1));
+await b.close();

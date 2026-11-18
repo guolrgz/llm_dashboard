@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户管理 · LLM推理 Token 流量管理系统</title>
+  <!-- 兼容入口：旧的独立用户管理页已并入 SPA，统一跳转到 /#/users -->
+  <meta http-equiv="refresh" content="0; url=./index.html#/users">
+  <script>
+    (function () {
+      var target = './index.html#/users'
+      try {
+        var next = new URL(target, window.location.href).href
+        window.location.replace(next)
+      } catch (err) {
+        window.location.replace(target)
+      }
+    })()
+  </script>
+</head>
+<body>
+  <p style="margin: 40px auto; max-width: 560px; font-family: system-ui, sans-serif; text-align: center; color: #334155;">
+    正在跳转到用户管理页…<br>
+    如果没有自动跳转，请点击
+    <a style="color: #2077ed;" href="./index.html#/users">进入用户管理</a>。
+  </p>
+</body>
+</html>

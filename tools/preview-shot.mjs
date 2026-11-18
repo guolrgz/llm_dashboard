@@ -1,0 +1,11 @@
+import path from 'node:path'; import fs from 'node:fs';
+process.env.PLAYWRIGHT_BROWSERS_PATH = './tools/browsers';
+const libs=['tools/libs/usr/lib/x86_64-linux-gnu','tools/libs/lib/x86_64-linux-gnu'].filter(d=>fs.existsSync(d)).map(d=>path.resolve(d));
+process.env.LD_LIBRARY_PATH=[...libs, process.env.LD_LIBRARY_PATH||''].filter(Boolean).join(':');
+const { chromium } = await import('playwright');
+const b = await chromium.launch({args:['--no-sandbox']});
+const p = await b.newPage({viewport:{width:1100,height:700}, deviceScaleFactor:2});
+await p.goto('file://' + path.resolve('tools/out/icons-preview.html'));
+await p.waitForTimeout(200);
+await p.screenshot({path:'tools/out/icons-preview.png'});
+await b.close();
